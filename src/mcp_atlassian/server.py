@@ -655,7 +655,7 @@ async def list_tools() -> list[Tool]:
                             "summary": {
                                 "type": "string",
                                 "description": "Summary/title of the issue. In Ambisis we use this template: "
-                                "{ Module } - { optional secondary module / related page } - { the task objective }",
+                                "{ Module } -> { optional secondary module / related page } - { the task objective }",
 
                             },
                             "issue_type": {
