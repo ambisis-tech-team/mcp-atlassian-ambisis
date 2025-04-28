@@ -428,10 +428,8 @@ async def list_tools() -> list[Tool]:
                                 "description": "The title of the page",
                             },
                             "content": {
-                                "type": "string",
-                                "description": "The content of the page in Markdown format. "
-                                "Supports headings, lists, tables, code blocks, and other "
-                                "Markdown syntax",
+                                "type": "storage",
+                                "description": "The content of the page in Storage format. ",
                             },
                             "parent_id": {
                                 "type": "string",
