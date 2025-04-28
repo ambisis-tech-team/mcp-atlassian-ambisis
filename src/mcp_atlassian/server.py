@@ -428,8 +428,8 @@ async def list_tools() -> list[Tool]:
                                 "description": "The title of the page",
                             },
                             "content": {
-                                "type": "storage",
-                                "description": "The content of the page in Storage format. ",
+                                "type": "string",
+                                "description": "The content of the page in Storage confluence format.",
                             },
                             "parent_id": {
                                 "type": "string",
@@ -456,7 +456,7 @@ async def list_tools() -> list[Tool]:
                             },
                             "content": {
                                 "type": "string",
-                                "description": "The new content of the page in Markdown format",
+                                "description": "The new content of the page in Storage confluence format",
                             },
                             "is_minor_edit": {
                                 "type": "boolean",
@@ -1061,7 +1061,7 @@ async def call_tool(name: str, arguments: Any) -> Sequence[TextContent]:
                 title=title,
                 body=content,
                 parent_id=parent_id,
-                is_markdown=True,
+                is_markdown=False,
             )
 
             # Format the result
@@ -1096,7 +1096,7 @@ async def call_tool(name: str, arguments: Any) -> Sequence[TextContent]:
                 body=content,
                 is_minor_edit=is_minor_edit,
                 version_comment=version_comment,
-                is_markdown=True,
+                is_markdown=False,
             )
 
             # Format results
