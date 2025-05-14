@@ -698,6 +698,101 @@ async def list_tools() -> list[Tool]:
                     },
                 ),
                 Tool(
+                    name="jira_create_idea_for_ambisis",
+                    description="Create a new Jira Product Discovery Idea for Ambisis. Making all the necessary standards and following the Ambisis template",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "project_key": {
+                                "type": "string",
+                                "description": "The project for creating ideas is always RAMB"
+                            },
+                            "summary": {
+                                "type": "string",
+                                "description": "Summary/title of the idea. Is literal the idea described in one line"
+                            },
+                            "briefDescription": {
+                                "type": "string",
+                                "description": "A simple description of the idea, in one or two sentences. Just for us to know what the idea is about.",
+                            },
+                            "effort": {
+                                "type": "number",
+                                "description": "The effort of how complex is to implement the idea, 1 to 5."
+                                "1 is the easiest for very simple ideas, like adding a simple field or making a small adjustment in the UI."
+                                "2 is for ideas that are a bit complex, like adding a new feature that is not too complex, like adding a new chart logic or a new report that are not too complex."
+                                "3 is for ideas that are complex, like adding a new feature that is complex, like adding a new complex report or a new feature that have never been implemented before."
+                                "4 is for ideas that are very complex, like adding a new feature that is very complex, like creating a new screen, refactoring a feature that may required multiple changes in multiple projects"
+                                "5 is for ideas that are extremely complex, creating entire new modules from scratch."
+                            },
+                            "impact": {
+                                "type": "number",
+                                "description": "The impact of the idea, represents how each idea contributes to the goal, 1 to 5."
+                                "1 is for ideas that are have little connection to Ambisis goals, like adding a new feature that is not related to the main goal of the project."
+                                "2 is for ideas that are have a bit connection to Ambisis goals, something that is not directly related to the main goal of the project, but still contributes to the goal."
+                                "3 is for ideas that are have a medium connection to Ambisis goals, something that is related to the main goal of the project, but not directly related."
+                                "4 is for ideas that are have a high connection to Ambisis goals, something that is directly related to the main goal of the project."
+                                "5 is for ideas that are have a very high connection to Ambisis goals, something that is directly related to the main goal of the project and is a must have."
+                            },
+                            "value": {
+                                "type": "number",
+                                "description": "The value perception of the idea for the user or interested agents, a value that an idea will deliver, 1 to 5."
+                                "1 is for ideas that will delivery very little value to the user or interested agents, the user will probably not even notice it"
+                                "2 is for ideas that will delivery a bit of value to the user or interested agents, the user will not care much about it"
+                                "3 is for ideas that will delivery a medium value to the user or interested agents, the user will be happy with it"
+                                "4 is for ideas that will delivery a high value to the user or interested agents, the user will be very happy with it"
+                                "5 is for ideas that will delivery a very high value to the user or interested agents, the agents will go crazy for it"
+                            },
+                            "confidence": {
+                                "type": "number",
+                                "description": "Level of confidence related to the success of an idea, 0 to 100."
+                                "0 to 20 is for ideas that are not confident at all, there is lots of uncertainty about the idea"
+                                "21 to 40 is for ideas that are somewhat confident, there is a good chance the idea will be successful"
+                                "41 to 60 is for ideas that are confident, there is a good chance the idea will be successful"
+                                "61 to 80 is for ideas that are very confident, there is a very good chance the idea will be successful"
+                                "81 to 100 is for ideas that are extremely confident, there is a very high chance the idea will be successful"
+                            },
+                            "moduloAmbisis": {
+                                "type": "array",
+                                "description": 
+                                "The modulo of the idea, must be an array of objects with the key id {id: \"10082\"} for example of the Ambisis module that the idea is related to. Possible values:\n"
+                                "10082: Relatórios\n"
+                                "10083: Impressão PDF\n"
+                                "10084: Configurações\n"
+                                "10085: Licenças\n"
+                                "10086: Checklists\n"
+                                "10087: Empresas\n"
+                                "10088: Empreendimentos\n"
+                                "10089: Gestão de projetos\n"
+                                "10090: Gestão de resíduos MTR\n"
+                                "10091: Ofícios\n"
+                                "10092: Novo módulo\n"
+                                "10093: Orçamentos\n"
+                                "10094: Usuários\n"
+                                "10095: Sistema WEB\n"
+                                "10096: Aplicativo mobile\n"
+                                "10097: Dashboard inicial\n"
+                                "10098: Dashboards\n"
+                                "10099: Arquivos\n"
+                                "10100: Inteligência artificial\n"
+                                "10101: Alertas e prazos\n"
+                                "10102: Técnico interno\n"
+                                "10103: Ordens de serviço\n"
+                                "10104: Atualização automática de licenças\n"
+                                "10105: Projetos de licenciamento\n"
+                                "10111: Processos minerários\n"
+                                "10112: Calendário\n"
+                                "10113: Requisitos legais (Legislações)\n"
+                                "10114: Protocolos\n"
+                                "10115: Certificados\n"
+                                "10140: Nova Integração\n"
+                                "10141: API Externa\n"
+                                "10142: Financeiro",
+                            },
+                        },
+                        "required": ["project_key", "summary", "briefDescription", "effort", "impact", "value", "confidence", "moduloAmbisis"],
+                    },
+                ),
+                Tool(
                     name="jira_update_issue",
                     description="Update an existing Jira issue including changing status, adding Epic links, updating fields, etc.",
                     inputSchema={
@@ -1263,6 +1358,48 @@ async def call_tool(name: str, arguments: Any) -> Sequence[TextContent]:
                     text=f"Issue created successfully:\n{json.dumps(result, indent=2, ensure_ascii=False)}",
                 )
             ]
+            
+        elif name == "jira_create_idea_for_ambisis":
+            if not ctx or not ctx.jira:
+                raise ValueError("Jira is not configured.")
+                
+            # Extract required arguments
+            project_key = arguments.get("project_key")
+            summary = arguments.get("summary")
+            brief_description = arguments.get("briefDescription")
+            effort = arguments.get("effort")
+            impact = arguments.get("impact")
+            value = arguments.get("value")
+            confidence = arguments.get("confidence")
+            moduloAmbisis = arguments.get("moduloAmbisis")
+            
+            # Create custom fields dictionary
+            custom_fields = {
+                "customfield_10102": effort,   # Effort custom field
+                "customfield_10082": impact,   # Impact custom field
+                "customfield_10101": value,    # Value custom field
+                "customfield_10104": confidence, # Confidence custom field
+                "customfield_10127": moduloAmbisis, # Modulo Ambisis custom field
+            }
+            
+            # Create the issue
+            issue = ctx.jira.create_issue(
+                project_key=project_key,
+                summary=summary,
+                issue_type="Idea",
+                description=brief_description,
+                **custom_fields
+            )
+            
+            result = issue.to_simplified_dict()
+            
+            return [
+                TextContent(
+                    type="text",
+                    text=f"Idea created successfully:\n{json.dumps(result, indent=2, ensure_ascii=False)}",
+                )
+            ]
+
         elif name == "jira_create_issue":
             if not ctx or not ctx.jira:
                 raise ValueError("Jira is not configured.")
