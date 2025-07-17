@@ -643,12 +643,12 @@ async def list_tools() -> list[Tool]:
                         "properties": {
                             "project_key": {
                                 "type": "string",
-                                "description": "For Ambisis Projects, you must choose one of the following: WEB, MOB, SVS"
-                                "WEB is for WEB related tasks, use this one if you are unsure."
-                                "MOB is for MOBILE related tasks."
-                                "SVS is for SERVICES/Backend related tasks."
-                                "This is the prefix of issue keys in your project. "
-                                "Never assume what it might be, always ask the user.",
+                                "description": "The project will be specified by the user, but you can use the following prefixes: "
+                                "MMP is for melhorias contínuas de produto, como melhorias de usabilidade"
+                                "BUG is for bugs, issues, problems, etc."
+                                "BIG is for big features, like new screens, new features, etc."
+                                "QA is for quality assurance, like automated testing, etc."
+                                "If the user does not specify the project, use the default project: MMP",
                             },
                             "summary": {
                                 "type": "string",
